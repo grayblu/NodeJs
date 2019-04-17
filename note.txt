@@ -1,0 +1,36 @@
+********** URL 구성 **********
+http://opentutorials.org:3000/main?id=HTML&page=12
+protocol / host(domain) / port / path / query string
+
+http는 기본 포트번호가 80이며 기본값 미설정 시 80으로
+
+* query string 구조: 이름=값 & 이름=값
+
+********** URL 입력 값에 따른 페이지 변환 예제 **********
+var http = require('http');
+var fs = require('fs');
+var url = require('url'); // url 모듈을 가져옴
+
+// URL을 통해 입력된 값 사용하기
+var app = http.createServer(function(request,response){
+    var _url = request.url;
+    // 출력 시 url임을 확인할 수 있음
+    console.log(_url)
+    // url에서 query을 분석하고 변수에 선언
+    var queryData = url.parse(_url, true).query;
+    // 객체가 prototype이고 이름,값으로 구성된 querystring을 확인
+    console.log(queryData);
+    if(_url == '/'){
+      _url = '/index.html';
+    }
+    if(_url == '/favicon.ico'){
+      return response.writeHead(404);
+    }
+    response.writeHead(200);
+    // 해당 id에 대한 값을 브라우저에 응답함
+    response.end(queryData.id);
+ 
+});
+app.listen(3000);
+
+********** 동적웹 구성 **********
